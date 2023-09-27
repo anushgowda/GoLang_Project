@@ -33,8 +33,8 @@ func InitUserService(collection *mongo.Collection) interfaces.IUser {
 	return &UserService{UserCollection: collection}
 }
 
-func (uc *UserService) Register(user *entities.User) (string, error) {
-	ctx := context.Background()
+func (uc *UserService) Register(user *entities.Register) (string, error) {
+	// ctx := context.Background()
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = user.CreatedAt
 	user.Email = strings.ToLower(user.Email)
@@ -44,12 +44,13 @@ func (uc *UserService) Register(user *entities.User) (string, error) {
 
 	}
 
-	if hashPassword, err := utils.HashPassword(user.Password); err != nil {
+	if hashPassword := utils.EncryptPassword(user); hashPassword != nil {
 	  user.Password = string(hashPassword)
+	  user.PasswordConfirm = string(hashPassword)
 	} else {
 	    return "Error in Password Encryption", nil
 	}
-	_, err :=  uc.UserCollection.InsertOne(ctx, user)
+	_, err :=  uc.UserCollection.InsertOne(context.Background(), user)
 	if err != nil {
 
         return "", err

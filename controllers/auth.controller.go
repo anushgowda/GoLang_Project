@@ -21,12 +21,13 @@ func InitAuthController(authService interfaces.IUser) *AuthController {
 
 func (a *AuthController) Register(c *gin.Context) {
 	fmt.Println("Invoked controller")
-	var user entities.User
-	err := c.BindJSON(&user)
+	var register entities.Register
+	err := c.BindJSON(&register)
 	if err != nil {
+		fmt.Println("controller not invoked")
 		return
 	}
-	result, err := a.AuthService.Register(&user)
+	result, err := a.AuthService.Register(&register)
 	fmt.Println(result)
 	if err != nil {
 		return

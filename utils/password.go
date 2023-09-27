@@ -1,20 +1,22 @@
 package utils
 
 import (
-	"fmt"
+	// "fmt"
 
+	"github.com/anushgowda/GoLang_Project/entities"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func HashPassword(password string) (string, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+func EncryptPassword(user *entities.Register) []byte {
+	userpass := []byte(user.Password)
 
-	if err != nil {
-		return "", fmt.Errorf("could not hash password %w", err)
+	if hashpass, err := bcrypt.GenerateFromPassword(userpass, 3); err == nil {
+		return hashpass
 	}
-	return string(hashedPassword), nil
+	return nil
 }
 
-func VerifyPassword(hashedPassword string, candidatePassword string) error {
-	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(candidatePassword))
+func VerifyPassword(hashedPassword string, password *entities.Login) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password.Password))
 }
+

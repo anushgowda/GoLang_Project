@@ -26,6 +26,7 @@ func main() {
 	InitializeDatabase()
 	// InitializeAuthentication()
 	InitializeProducts()
+	InitializeUser()
 	ctx1, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	defer mongoClient.Disconnect(ctx1)
@@ -45,4 +46,11 @@ func InitializeProducts() {
 	productSvc := services.InitProductService(productCollection)
 	productCtrl := controllers.InitProductController(productSvc)
 	routes.ProductRoutes(server, *productCtrl)
+}
+
+func InitializeUser() {
+	userCollection := config.GetCollection(mongoClient, "anush_ekart", "users")
+	userSvc := services.InitUserService(userCollection)
+	userController := controllers.InitAuthController(userSvc)
+	routes.UserRoutes(server, *userController)
 }
