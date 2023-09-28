@@ -68,7 +68,7 @@ func (uc *UserService) Login(user *entities.Login) (string, error) {
 	//compare hashsed password with user entered password
 	err2 := utils.VerifyPassword(loginResult.Password, user)
 	if err != nil {
-		return "wrong email or password", err2
+		return "wrong email or ", err2
 	}
 	return "login Successful", nil
 }

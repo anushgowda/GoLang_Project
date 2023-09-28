@@ -22,6 +22,3 @@ type Login struct{
 	Email              string    `json:"Email" bson:"Email" binding:"required"`
 	Password           string    `json:"Password" bson:"Password" binding:"required,min=8"`
 }
-type LoginResponse struct {
-	Response           string    `json:"Response"`
-}

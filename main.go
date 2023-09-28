@@ -24,7 +24,6 @@ var (
 func main() {
 	server = gin.Default()
 	InitializeDatabase()
-	// InitializeAuthentication()
 	InitializeProducts()
 	InitializeUser()
 	ctx1, cancel := context.WithTimeout(context.Background(), 10*time.Second)

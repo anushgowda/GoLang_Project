@@ -53,6 +53,6 @@ func (a *AuthController) Login(c *gin.Context) {
 }
 
 func (a *AuthController) Logout(c *gin.Context) {
-	fmt.Println("user Logged out")
-
+	result := a.AuthService.Logout()
+	c.IndentedJSON(http.StatusOK, result)
 }

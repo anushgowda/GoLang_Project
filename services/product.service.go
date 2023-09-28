@@ -3,28 +3,16 @@ package services
 import (
 	"context"
 	"time"
-	// "fmt"
 
 	"github.com/anushgowda/GoLang_Project/entities"
 	"github.com/anushgowda/GoLang_Project/interfaces"
-
-	// "go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type ProductService struct {
 	Product *mongo.Collection
-}
-
-// Addproduct implements interfaces.IProduct.
-// func (*ProductService) Addproduct(p *entities.Product) error {
-// 	panic("unimplemented")
-// }
-
-// GetProductById implements interfaces.IProduct.
-func (*ProductService) GetProductById(id primitive.ObjectID) (*entities.Product, error) {
-	panic("unimplemented")
 }
 
 // SearchProducts implements interfaces.IProduct.
@@ -47,4 +35,16 @@ func (p *ProductService) Addproduct(product *entities.Product) (string, error) {
 	} else {
 		return "Record Inserted Successfully", nil
 	}
+}
+
+func (p *ProductService) GetProductById(id primitive.ObjectID) (*entities.Product, error) {
+
+	ctx := context.Background()
+	var product entities.Product
+	err := p.Product.FindOne(ctx, bson.M{"_id": id}).Decode(&product)
+	if err != nil {
+		return nil, err
+	}
+
+	return &product, nil
 }
