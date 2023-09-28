@@ -3,7 +3,7 @@ package services
 import (
 	"context"
 	"time"
-
+	"fmt"
 	"github.com/anushgowda/GoLang_Project/entities"
 	"github.com/anushgowda/GoLang_Project/interfaces"
 	"go.mongodb.org/mongo-driver/bson"
@@ -15,10 +15,7 @@ type ProductService struct {
 	Product *mongo.Collection
 }
 
-// SearchProducts implements interfaces.IProduct.
-func (*ProductService) SearchProducts(name string) (*entities.Product, error) {
-	panic("unimplemented")
-}
+
 
 func InitProductService(collection *mongo.Collection) interfaces.IProduct {
 
@@ -47,4 +44,31 @@ func (p *ProductService) GetProductById(id primitive.ObjectID) (*entities.Produc
 	}
 
 	return &product, nil
+}
+
+
+func (prod *ProductService) SearchProducts(name string) ([]*entities.Product, error) {
+	var products []*entities.Product
+	cursor, err := prod.Product.Find(context.TODO(), bson.M{"Name": name})
+	if err != nil {
+		return nil, err
+	} else {
+		fmt.Println(cursor)
+		for cursor.Next(context.TODO()) {
+			product := &entities.Product{}
+			err := cursor.Decode(product)
+
+			if err != nil {
+				return nil, err
+			}
+			products = append(products, product)
+		}
+		if err := cursor.Err(); err != nil {
+			return nil, err
+		}
+		if len(products) == 0 {
+			return []*entities.Product{}, nil
+		}
+		return products, nil
+	}
 }
